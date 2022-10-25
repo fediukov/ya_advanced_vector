@@ -8,7 +8,7 @@
 
 namespace {
 
-    // "Магическое" число, используемое для отслеживания живости объекта
+    // a "magic" number used to keep track of the liveliness of an object
     inline const uint32_t DEFAULT_COOKIE = 0xdeadbeef;
 
     struct TestObj {
@@ -360,8 +360,7 @@ void Test4() {
     {
         Vector<TestObj> v(1);
         assert(v.Size() == v.Capacity());
-        // Операция PushBack существующего элемента вектора должна быть безопасна
-        // даже при реаллокации памяти
+        // operation must be safe even with memory reallocation
         v.PushBack(v[0]);
         assert(v[0].IsAlive());
         assert(v[1].IsAlive());
@@ -369,8 +368,7 @@ void Test4() {
     {
         Vector<TestObj> v(1);
         assert(v.Size() == v.Capacity());
-        // Операция PushBack для перемещения существующего элемента вектора должна быть безопасна
-        // даже при реаллокации памяти
+        // operation must be safe even with memory reallocation
         v.PushBack(std::move(v[0]));
         assert(v[0].IsAlive());
         assert(v[1].IsAlive());
@@ -396,8 +394,7 @@ void Test5() {
     {
         Vector<TestObj> v(1);
         assert(v.Size() == v.Capacity());
-        // Операция EmplaceBack существующего элемента вектора должна быть безопасна
-        // даже при реаллокации памяти
+        // operation must be safe even with memory reallocation
         v.EmplaceBack(v[0]);
         assert(v[0].IsAlive());
         assert(v[1].IsAlive());
@@ -429,9 +426,6 @@ void Test5andahalf()
         it = std::find(v.begin(), v.end(), 3);
         v.Emplace(it, 33);
         for (const auto i : v) { std::cout << i << " "; } std::cout << std::endl;
-    }
-    {
-
     }
 }
 
@@ -465,14 +459,13 @@ void Test6() {
         assert(Obj::num_copied == 1);
         assert(Obj::num_default_constructed == SIZE);
         assert(Obj::GetAliveObjectCount() == SIZE + 2);
-    }//*/
+    }
     {
         Obj::ResetCounters();
         Vector<Obj> v;
         auto* pos = v.Emplace(v.end(), Obj{ 1 });
         assert(v.Size() == 1);
         assert(v.Capacity() >= v.Size());
-        //std::cout << &*pos << " " << &v[0] << std::endl;
         assert(&*pos == &v[0]);
         assert(Obj::num_moved == 1);
         assert(Obj::num_constructed_with_id == 1);
@@ -480,7 +473,7 @@ void Test6() {
         assert(Obj::num_assigned == 0);
         assert(Obj::num_move_assigned == 0);
         assert(Obj::GetAliveObjectCount() == 1);
-    }//*/
+    }
     {
         Obj::ResetCounters();
         Vector<Obj> v;
@@ -489,9 +482,7 @@ void Test6() {
         assert(v.Size() == 1);
         assert(v.Capacity() >= v.Size());
         assert(&*pos == &v[0]);
-        //std::cout << 1 << " " << 1 << " " << 0 << " " << 0 << " " << 0 << " " << 1 << std::endl;
-        //std::cout << Obj::num_moved << " " << Obj::num_constructed_with_id << " " << Obj::num_copied << " " << Obj::num_assigned << " " << Obj::num_move_assigned << " " << Obj::GetAliveObjectCount() << std::endl;
-        assert(Obj::num_moved == 1);
+       assert(Obj::num_moved == 1);
         assert(Obj::num_constructed_with_id == 1);
         assert(Obj::num_copied == 0);
         assert(Obj::num_assigned == 0);
@@ -523,7 +514,7 @@ void Test6() {
         assert(std::all_of(v.begin(), v.end(), [](const TestObj& obj) {
             return obj.IsAlive();
             }));
-    }//*/
+    }
     {
         Vector<TestObj> v{ SIZE };
         v.Emplace(v.cbegin() + 2, std::move(v[0]));
@@ -546,7 +537,7 @@ void Test6() {
         assert(Obj::num_move_assigned == 0);
         assert(Obj::num_assigned == 0);
         assert(Obj::GetAliveObjectCount() == SIZE + 1);
-    }//*/
+    }
     {
         Obj::ResetCounters();
         Vector<Obj> v{ SIZE };
@@ -595,7 +586,7 @@ void Test6() {
         assert(Obj::num_move_assigned == SIZE - 2);
         assert(Obj::num_moved == 0);
         assert(Obj::GetAliveObjectCount() == SIZE - 1);
-    }//*/
+    }
 }
 
 struct C {
